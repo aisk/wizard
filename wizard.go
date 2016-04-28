@@ -2,9 +2,15 @@ package wizard
 
 import (
 	"fmt"
+	"github.com/bgentry/speakeasy"
 	"github.com/fatih/color"
 	"strconv"
 )
+
+type Input struct {
+	Hidden bool
+	Result *string
+}
 
 type Answer struct {
 	Content string
@@ -14,10 +20,21 @@ type Answer struct {
 type Question struct {
 	Content string
 	Answers []Answer
+	Input   *Input
 }
 
 func Ask(questions []Question) {
 	for _, question := range questions {
+		if question.Input != nil {
+			print(">> ")
+			if question.Input.Hidden {
+				password, _ := speakeasy.Ask("Your LeanCloud login password (will hidden while input): ")
+				question.Input.Result = &password
+			} else {
+				fmt.Scanln(question.Input.Result)
+			}
+			continue
+		}
 		printQuestion(question)
 		printAnswers(question)
 		handler := scanAnswerNumber(question)
