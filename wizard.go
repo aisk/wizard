@@ -25,17 +25,17 @@ type Question struct {
 
 func Ask(questions []Question) {
 	for _, question := range questions {
+		printQuestion(question)
 		if question.Input != nil {
 			print(">> ")
 			if question.Input.Hidden {
-				password, _ := speakeasy.Ask("Your LeanCloud login password (will hidden while input): ")
-				question.Input.Result = &password
+				password, _ := speakeasy.Ask("(input will be hidden)")
+				*question.Input.Result = password
 			} else {
 				fmt.Scanln(question.Input.Result)
 			}
 			continue
 		}
-		printQuestion(question)
 		printAnswers(question)
 		handler := scanAnswerNumber(question)
 		handler()
