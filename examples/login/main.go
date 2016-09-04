@@ -9,6 +9,7 @@ func main() {
 	username := ""
 	password := ""
 	loginNextTime := false
+
 	questions := []wizard.Question{
 		{
 			Content: "PLease input your user name:",
@@ -41,7 +42,12 @@ func main() {
 			},
 		},
 	}
-	wizard.Ask(questions)
+
+	err := wizard.Ask(questions)
+	if err != nil {
+		panic(err)
+	}
+
 	fmt.Println("Your username is", username)
 	fmt.Println("Your password is", password)
 	fmt.Println("Login next time is", loginNextTime)
