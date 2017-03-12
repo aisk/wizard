@@ -26,11 +26,11 @@ func useInquirer() bool {
 		return false
 	}
 
-	if _, err := exec.LookPath("python2.7"); err != nil {
+	if _, err := exec.LookPath("python3"); err != nil {
 		return false
 	}
 
-	cmd := exec.Command("python2.7", "-c", detectCode)
+	cmd := exec.Command("python3", "-c", detectCode)
 	return cmd.Run() == nil
 }
 
@@ -88,6 +88,8 @@ func inquirer(questions []Question) error {
 	}
 
 	code := fmt.Sprintf(`
+# coding: utf-8
+
 import json
 import inquirer
 
@@ -102,7 +104,7 @@ with open('%s', 'w') as f:
 	if ioutil.WriteFile(scriptPath, []byte(code), 0644); err != nil {
 		return err
 	}
-	cmd := exec.Command("python2.7", scriptPath)
+	cmd := exec.Command("python3", scriptPath)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
