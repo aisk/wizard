@@ -2,6 +2,7 @@ package wizard
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -90,13 +91,19 @@ func inquirer(questions []Question) error {
 	code := fmt.Sprintf(`
 # coding: utf-8
 
+import sys
 import json
+
 import inquirer
 
 with open('%s') as f:
     questions = inquirer.load_from_json(f.read())
 
 answers = inquirer.prompt(questions)
+
+if answers is None:
+	sys.exit(1)
+
 
 with open('%s', 'w') as f:
 	json.dump(answers, f)
@@ -109,6 +116,9 @@ with open('%s', 'w') as f:
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	if err = cmd.Run(); err != nil {
+		if _, ok := err.(*exec.ExitError); ok {
+			return errors.New("wizard cancelled")
+		}
 		return err
 	}
 

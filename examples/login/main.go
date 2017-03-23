@@ -45,6 +45,7 @@ func main() {
 
 	err := wizard.Ask(questions)
 	if err != nil {
+		println("error happened!")
 		panic(err)
 	}
 
